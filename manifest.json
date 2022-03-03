@@ -1,12 +1,13 @@
 {
     "name": "Firebase User Changer",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "Extension that helps changing the firebase console url to a specific user.",
     "permissions": [
         "webRequest",
         "webRequestBlocking",
         "storage",
-        "*://console.firebase.google.com/*"
+        "*://console.firebase.google.com/*",
+        "*://play.google.com/*"
     ],
     "background": {
         "page": "background.html",

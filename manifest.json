@@ -3,18 +3,12 @@
     "version": "0.2.0",
     "description": "Extension that helps changing the firebase console url to a specific user.",
     "permissions": [
-        "webRequest",
-        "webRequestBlocking",
-        "storage",
-        "*://console.firebase.google.com/*",
-        "*://play.google.com/*"
+        "declarativeNetRequestWithHostAccess",
+        "storage"
     ],
     "background": {
-        "page": "background.html",
-        "persistent": true
-    },
-    "browser_action": {
-        "default_popup": "popup.html"
+        "service_worker": "service_worker.js",
+        "type": "module"
     },
     "icons": {
         "16": "icon16.png",
@@ -22,5 +16,13 @@
         "48": "icon48.png",
         "128": "icon128.png"
     },
-    "manifest_version": 2
+    "manifest_version": 3,
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "content_security_policy": {},
+    "host_permissions": [
+        "*://console.firebase.google.com/*",
+        "*://play.google.com/*"
+    ]
 }

@@ -2,11 +2,82 @@
 
 <head>
     <title>Firebase User Changer</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 12px;
+            min-width: 240px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+
+        .field-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        label {
+            font-size: 11px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="number"] {
+            padding: 6px 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 13px;
+            transition: opacity 0.2s;
+        }
+
+        input[type="number"]:disabled {
+            opacity: 0.4;
+            background-color: #f5f5f5;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #1a73e8;
+        }
+
+        button {
+            width: 100%;
+            padding: 7px;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #1558b0;
+        }
+    </style>
 </head>
 
 <body>
-    <input type="text" id="firebase_user_id">
-    <input type="text" id="play_console_user_id">
+    <div class="field">
+        <div class="field-header">
+            <input type="checkbox" id="firebase_enabled">
+            <label for="firebase_enabled">Firebase User ID</label>
+        </div>
+        <input type="number" id="firebase_user_id" placeholder="Enter user ID" disabled>
+    </div>
+    <div class="field">
+        <div class="field-header">
+            <input type="checkbox" id="play_console_enabled">
+            <label for="play_console_enabled">Play Console User ID</label>
+        </div>
+        <input type="number" id="play_console_user_id" placeholder="Enter user ID" disabled>
+    </div>
     <button id="save">Save</button>
     <script src="popup.js" type="module"></script>
 </body>

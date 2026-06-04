@@ -1,6 +1,6 @@
 'use strict';
 
-import { key_firebase_user_id, key_play_console_user_id, key_firebase_rule_id, key_play_console_rule_id } from './constants.js'
+import { key_firebase_user_id, key_firebase_enabled, key_play_console_user_id, key_play_console_enabled, key_firebase_rule_id, key_play_console_rule_id } from './constants.js'
 
 setupDynamicRules();
 
@@ -14,8 +14,12 @@ function setupDynamicRules() {
 }
 
 async function setupFirebaseRule() {
-    const { firebase_user_id } = await chrome.storage.local.get([key_firebase_user_id]);
-    if (typeof firebase_user_id === 'undefined') {
+    const result = await chrome.storage.local.get([key_firebase_user_id, key_firebase_enabled]);
+    const firebase_user_id = result[key_firebase_user_id];
+    const enabled = result[key_firebase_enabled] ?? false;
+
+    if (!enabled || typeof firebase_user_id === 'undefined') {
+        chrome.declarativeNetRequest.updateDynamicRules({ removeRuleIds: [key_firebase_rule_id] });
         return;
     }
     chrome.declarativeNetRequest.updateDynamicRules({
@@ -39,8 +43,12 @@ async function setupFirebaseRule() {
 }
 
 async function setupPlayConsoleRule() {
-    const { play_console_user_id } = await chrome.storage.local.get([key_play_console_user_id]);
-    if (typeof play_console_user_id === 'undefined') {
+    const result = await chrome.storage.local.get([key_play_console_user_id, key_play_console_enabled]);
+    const play_console_user_id = result[key_play_console_user_id];
+    const enabled = result[key_play_console_enabled] ?? false;
+
+    if (!enabled || typeof play_console_user_id === 'undefined') {
+        chrome.declarativeNetRequest.updateDynamicRules({ removeRuleIds: [key_play_console_rule_id] });
         return;
     }
     chrome.declarativeNetRequest.updateDynamicRules({

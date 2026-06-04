@@ -23,6 +23,7 @@
     "content_security_policy": {},
     "host_permissions": [
         "*://console.firebase.google.com/*",
-        "*://play.google.com/*"
+        "*://play.google.com/*",
+        "*://console.cloud.google.com/*"
     ]
 }

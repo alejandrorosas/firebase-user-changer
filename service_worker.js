@@ -1,6 +1,6 @@
 'use strict';
 
-import { key_firebase_user_id, key_firebase_enabled, key_play_console_user_id, key_play_console_enabled, key_firebase_rule_id, key_play_console_rule_id } from './constants.js'
+import { key_firebase_user_id, key_firebase_enabled, key_play_console_user_id, key_play_console_enabled, key_cloud_console_user_id, key_cloud_console_enabled, key_firebase_rule_id, key_play_console_rule_id, key_cloud_console_rule_id } from './constants.js'
 
 setupDynamicRules();
 
@@ -11,6 +11,7 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
 function setupDynamicRules() {
     setupFirebaseRule();
     setupPlayConsoleRule();
+    setupCloudConsoleRule();
 }
 
 async function setupFirebaseRule() {
@@ -39,6 +40,40 @@ async function setupFirebaseRule() {
             }
         }],
         removeRuleIds: [key_firebase_rule_id]
+    });
+}
+
+async function setupCloudConsoleRule() {
+    const result = await chrome.storage.local.get([key_cloud_console_user_id, key_cloud_console_enabled]);
+    const cloud_console_user_id = result[key_cloud_console_user_id];
+    const enabled = result[key_cloud_console_enabled] ?? false;
+
+    if (!enabled || typeof cloud_console_user_id === 'undefined') {
+        chrome.declarativeNetRequest.updateDynamicRules({ removeRuleIds: [key_cloud_console_rule_id] });
+        return;
+    }
+    chrome.declarativeNetRequest.updateDynamicRules({
+        addRules: [{
+            "id": key_cloud_console_rule_id,
+            "priority": 1,
+            "action": {
+                "type": "redirect",
+                "redirect": {
+                    "transform": {
+                        "queryTransform": {
+                            "addOrReplaceParams": [
+                                { "key": "authuser", "value": String(cloud_console_user_id) }
+                            ]
+                        }
+                    }
+                }
+            },
+            "condition": {
+                "requestDomains": ["console.cloud.google.com"],
+                "resourceTypes": ["main_frame"]
+            }
+        }],
+        removeRuleIds: [key_cloud_console_rule_id]
     });
 }
 

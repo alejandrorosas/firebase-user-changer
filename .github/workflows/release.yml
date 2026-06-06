@@ -9,16 +9,21 @@ permissions: {}
 
 jobs:
   release:
+    runs-on: ubuntu-latest
     permissions:
       contents: write
-    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
 
+      - name: Update manifest version for release
+        run: |
+          VERSION=$(echo "$GITHUB_REF_NAME" | sed 's/^v//')
+          jq --arg ver "$VERSION" '.version = $ver | del(.version_name)' manifest.json > temp.json && mv temp.json manifest.json
+
       - name: Create Chrome Extension ZIP
         run: |
-          zip -r firebase-user-changer-${{ github.ref_name }}.zip . -x "*.git*" "*.github*"
+          zip -r firebase-user-changer-"$GITHUB_REF_NAME".zip . -x "*.git*" "*.github*"
 
       - name: Upload Workflow Artifact
         uses: actions/upload-artifact@v7

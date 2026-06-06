@@ -1,10 +1,20 @@
-# Firebase User Changer
+<p align="center">
+  <img src="icon128.png" width="128" height="128" alt="Firebase User Changer Logo">
+</p>
+
+<h1 align="center">Firebase User Changer</h1>
+
+<div align="center">
+
+[![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/hifpbkhihabmonkmioehggekhokngnch?style=flat&logo=googlechrome&logoColor=white&color=blue)](https://chromewebstore.google.com/detail/firebase-user-changer/hifpbkhihabmonkmioehggekhokngnch) [![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/hifpbkhihabmonkmioehggekhokngnch?style=flat&logo=googlechrome&logoColor=white&color=orange)](https://chromewebstore.google.com/detail/firebase-user-changer/hifpbkhihabmonkmioehggekhokngnch)
+
+</div>
+
+<br/>
 
 A lightweight Chrome Extension that automatically redirects Firebase, Google Play, and Google Cloud Console links to your preferred user account index. 
 
 No more landing on the wrong Google account (`/u/0`) and facing "Permission Denied" errors when clicking console links.
-
----
 
 ## The Problem
 
@@ -12,9 +22,7 @@ If you manage multiple Google or developer accounts, clicking links to the Fireb
 
 ## The Solution
 
-Firebase User Changer intercepts console navigation in the background and rewrites the URLs on the fly to target the exact user index you specify. 
-
----
+Firebase User Changer intercepts console navigation in the background and rewrites the URLs on the fly to target the exact user index you specify.
 
 ## Features
 
@@ -23,8 +31,6 @@ Firebase User Changer intercepts console navigation in the background and rewrit
 - Google Cloud Console Support: Directly opens GCP projects with your correct credentials.
 - Granular Controls: Turn redirection on/off individually for Firebase, Play Console, or Cloud Console via simple checkbox controls.
 - Local Storage: Save your configured User ID indices once, and the extension runs quietly in the background.
-
----
 
 ## Installation
 

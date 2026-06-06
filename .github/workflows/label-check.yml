@@ -1,0 +1,35 @@
+name: Label Check
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - labeled
+      - unlabeled
+
+permissions: {}
+
+jobs:
+  label-check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Check for exactly one version label
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const validLabels = new Set(['major', 'minor', 'patch', 'dependencies', 'skip-changelog']);
+            const prLabels = context.payload.pull_request.labels;
+
+            const matchingLabels = prLabels.filter(label => validLabels.has(label.name));
+
+            if (matchingLabels.length !== 1) {
+              const errorMessage = `One of the following labels is required: ${[...validLabels].join(', ')}. Found ${matchingLabels.length} (${matchingLabels.map(l => l.name).join(', ')}).`;
+              core.setFailed(errorMessage);
+            } else {
+              console.log(`Success: Found valid label: ${matchingLabels[0].name}`);
+            }

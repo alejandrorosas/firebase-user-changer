@@ -1,0 +1,32 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions: {}
+
+jobs:
+  release:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Create Chrome Extension ZIP
+        run: |
+          zip -r firebase-user-changer-${{ github.ref_name }}.zip . -x "*.git*" "*.github*"
+
+      - name: Upload Workflow Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: firebase-user-changer-${{ github.ref_name }}
+          path: firebase-user-changer-${{ github.ref_name }}.zip
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v3
+        with:
+          files: firebase-user-changer-${{ github.ref_name }}.zip

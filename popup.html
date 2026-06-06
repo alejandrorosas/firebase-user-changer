@@ -1,91 +1,361 @@
+<!DOCTYPE html>
 <html>
 
 <head>
+    <meta charset="utf-8">
     <title>Firebase User Changer</title>
     <style>
-        body {
-            font-family: sans-serif;
-            padding: 12px;
-            min-width: 240px;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-        .field {
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #0f172a;
+            color: #f1f5f9;
+            margin: 0;
+            padding: 14px;
+            width: 320px;
+            box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            margin-bottom: 10px;
+            gap: 12px;
         }
 
-        .field-header {
+        .header {
             display: flex;
             align-items: center;
-            gap: 6px;
-            margin-bottom: 4px;
+            gap: 8px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #1e293b;
         }
 
-        label {
-            font-size: 11px;
-            font-weight: bold;
-            color: #555;
+
+        .header h1 {
+            font-size: 15px;
+            font-weight: 600;
+            margin: 0;
+            background: linear-gradient(135deg, #f8fafc, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        input[type="number"] {
-            padding: 6px 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+        .card {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: #475569;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .badge-firebase {
+            background-color: #f59e0b;
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+        }
+
+        .badge-play {
+            background-color: #10b981;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+        }
+
+        .badge-cloud {
+            background-color: #3b82f6;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+        }
+
+        .card-title-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title-text h2 {
             font-size: 13px;
-            transition: opacity 0.2s;
+            font-weight: 600;
+            margin: 0;
+            color: #f8fafc;
         }
 
-        input[type="number"]:disabled {
-            opacity: 0.4;
-            background-color: #f5f5f5;
+        .card-subtitle {
+            font-size: 10px;
+            color: #64748b;
+            margin-top: 1px;
+        }
+
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow: hidden;
+            transition: max-height 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, margin-top 0.2s ease;
+            max-height: 80px;
+            opacity: 1;
+            margin-top: 4px;
+        }
+
+        /* Closed/Disabled state animation */
+        .card.disabled .card-body {
+            max-height: 0;
+            opacity: 0;
+            margin-top: 0;
+            pointer-events: none;
+        }
+
+        .input-label {
+            font-size: 10px;
+            font-weight: 500;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Toggle switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 36px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #334155;
+            transition: .2s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 20px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: #ffffff;
+            transition: .2s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 50%;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        input:checked + .slider {
+            background-color: #6366f1;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(16px);
+        }
+
+        /* Input styling */
+        input[type="number"] {
+            width: 100%;
+            padding: 8px 10px;
+            background-color: #0b0f19;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            color: #f1f5f9;
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
         }
 
         input[type="number"]:focus {
-            outline: none;
-            border-color: #1a73e8;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        /* Actions & Save button */
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 4px;
         }
 
         button {
             width: 100%;
-            padding: 7px;
-            background-color: #1a73e8;
-            color: white;
-            border: none;
-            border-radius: 4px;
+            padding: 10px;
+            font-family: inherit;
             font-size: 13px;
+            font-weight: 600;
+            border-radius: 6px;
+            border: none;
             cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
-        button:hover {
-            background-color: #1558b0;
+        button:not(:disabled) {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        button:not(:disabled):hover {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+            transform: translateY(-1px);
+        }
+
+        button:not(:disabled):active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(99, 102, 241, 0.3);
+        }
+
+        button:disabled {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            color: #475569;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .status-msg {
+            font-size: 11px;
+            text-align: center;
+            height: 16px;
+            line-height: 16px;
+            color: #64748b;
+            transition: opacity 0.2s ease;
+            opacity: 0;
+            font-weight: 500;
+        }
+
+        .status-msg.visible {
+            opacity: 1;
+        }
+
+        .status-msg.success {
+            color: #10b981;
         }
     </style>
 </head>
 
 <body>
-    <div class="field">
-        <div class="field-header">
-            <input type="checkbox" id="firebase_enabled">
-            <label for="firebase_enabled">Firebase User ID</label>
-        </div>
-        <input type="number" id="firebase_user_id" placeholder="Enter user ID" disabled>
+    <div class="header">
+        <img src="icon32.png" width="32" height="32" alt="Firebase User Changer Logo">
+        <h1>Firebase User Changer</h1>
     </div>
-    <div class="field">
-        <div class="field-header">
-            <input type="checkbox" id="play_console_enabled">
-            <label for="play_console_enabled">Play Console User ID</label>
+
+    <!-- Firebase Console Card -->
+    <div class="card" id="card_firebase">
+        <div class="card-header">
+            <div class="card-title-group">
+                <span class="badge badge-firebase"></span>
+                <div class="card-title-text">
+                    <h2>Firebase Console</h2>
+                    <span class="card-subtitle">console.firebase.google.com</span>
+                </div>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="firebase_enabled">
+                <span class="slider"></span>
+            </label>
         </div>
-        <input type="number" id="play_console_user_id" placeholder="Enter user ID" disabled>
-    </div>
-    <div class="field">
-        <div class="field-header">
-            <input type="checkbox" id="cloud_console_enabled">
-            <label for="cloud_console_enabled">Cloud Console User ID</label>
+        <div class="card-body">
+            <label for="firebase_user_id" class="input-label">Account Index</label>
+            <input type="number" id="firebase_user_id" placeholder="e.g. 0, 1, 2" disabled min="0">
         </div>
-        <input type="number" id="cloud_console_user_id" placeholder="Enter user ID" disabled>
     </div>
-    <button id="save">Save</button>
+
+    <!-- Play Console Card -->
+    <div class="card" id="card_play">
+        <div class="card-header">
+            <div class="card-title-group">
+                <span class="badge badge-play"></span>
+                <div class="card-title-text">
+                    <h2>Play Console</h2>
+                    <span class="card-subtitle">play.google.com/console</span>
+                </div>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="play_console_enabled">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="card-body">
+            <label for="play_console_user_id" class="input-label">Account Index</label>
+            <input type="number" id="play_console_user_id" placeholder="e.g. 0, 1, 2" disabled min="0">
+        </div>
+    </div>
+
+    <!-- Cloud Console Card -->
+    <div class="card" id="card_cloud">
+        <div class="card-header">
+            <div class="card-title-group">
+                <span class="badge badge-cloud"></span>
+                <div class="card-title-text">
+                    <h2>Cloud Console</h2>
+                    <span class="card-subtitle">console.cloud.google.com</span>
+                </div>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="cloud_console_enabled">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="card-body">
+            <label for="cloud_console_user_id" class="input-label">Account Index</label>
+            <input type="number" id="cloud_console_user_id" placeholder="e.g. 0, 1, 2" disabled min="0">
+        </div>
+    </div>
+
+    <!-- Actions Footer -->
+    <div class="actions">
+        <button id="save" disabled>Save Configuration</button>
+        <div id="status" class="status-msg"></div>
+    </div>
+
     <script src="popup.js" type="module"></script>
 </body>
 

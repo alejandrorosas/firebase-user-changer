@@ -2,7 +2,7 @@
     "name": "Firebase User Changer",
     "version": "0.0.0",
     "version_name": "0.0.0-dev",
-    "description": "Extension that helps changing the firebase console url to a specific user.",
+    "description": "Automatically redirects Firebase, Play, and Cloud Console links to your preferred Google account index.",
     "permissions": [
         "declarativeNetRequestWithHostAccess",
         "storage"

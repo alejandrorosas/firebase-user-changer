@@ -2,34 +2,45 @@ name-template: 'v$RESOLVED_VERSION'
 tag-template: 'v$RESOLVED_VERSION'
 categories:
   - title: 'Features'
-    labels:
-      - 'feature'
-      - 'enhancement'
+    when:
+      labels:
+        - 'feature'
+        - 'enhancement'
   - title: 'Bug Fixes'
-    labels:
-      - 'fix'
-      - 'bugfix'
-      - 'bug'
+    when:
+      labels:
+        - 'fix'
+        - 'bugfix'
+        - 'bug'
   - title: 'Maintenance'
-    labels:
-      - 'chore'
-      - 'dependencies'
-exclude-labels:
-  - 'skip-changelog'
-change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
-change-title-escapes: '\<*_&'
-version-resolver:
-  major:
-    labels:
-      - 'major'
-  minor:
-    labels:
-      - 'minor'
-  patch:
-    labels:
-      - 'patch'
-  default: patch
-template: |
-  ## Changes
+    when:
+      labels:
+        - 'chore'
+        - 'dependencies'
+  - type: pre-exclude
+    when:
+      label: 'skip-changelog'
+  - type: version-resolver
+    semver-increment: patch
+    exclusive: true
+    when:
+      label: 'dependencies'
+  - type: version-resolver
+    semver-increment: major
+    when:
+      label: 'major'
+  - type: version-resolver
+    semver-increment: minor
+    when:
+      label: 'minor'
+  - type: version-resolver
+    semver-increment: patch
+    when:
+      label: 'patch'
+  - type: version-resolver
+    semver-increment: patch
 
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+template: |
+  ## What's Changed
   $CHANGES
